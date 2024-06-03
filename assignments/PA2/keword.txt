@@ -1,0 +1,11 @@
+(*gggggg*)
+class ABC INHERITS aa{
+    a = true;
+    false;
+    99999;
+    "mmmm\mmm";
+    "\n";
+    "88888888888888888
+    "
+    *)
+}

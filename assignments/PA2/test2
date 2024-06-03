@@ -1,0 +1,9 @@
+`~!@#$%^&*()_+=[]'<>?/.
+___what_am_I
+LET_STMT --This is strange! *)
+"I am an unescaped
+newline"
+"I am an escaped\
+newline"
+*)
+(*I am EOF in comment

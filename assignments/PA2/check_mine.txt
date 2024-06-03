@@ -1,0 +1,12 @@
+#name "test41"
+#1 ERROR "["
+#1 STR_CONST "may the force be with you"
+#1 ERROR "]"
+#3 ERROR "Unterminated string constant"
+#3 OBJECTID unescaped
+#4 ERROR "Unterminated string constant"
+#5 STR_CONST "multiline \nstring"
+#6 ERROR "String contains null character."
+#6 ERROR "\000"
+#7 ERROR "Unmatched *)"
+#8 ERROR "EOF in string constant"

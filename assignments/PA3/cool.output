@@ -1,0 +1,2304 @@
+终端机在文法中未使用
+
+    ERROR
+
+
+语法
+
+    0 $accept: program $end
+
+    1 program: class_list
+
+    2 class_list: class
+    3           | class_list class
+    4           | class_list error ';'
+
+    5 class: CLASS TYPEID '{' '}' ';'
+    6      | CLASS TYPEID INHERITS TYPEID '{' '}' ';'
+    7      | CLASS TYPEID '{' dummy_feature_list '}' ';'
+    8      | CLASS TYPEID INHERITS TYPEID '{' dummy_feature_list '}' ';'
+
+    9 dummy_feature_list: feature ';'
+   10                   | dummy_feature_list feature ';'
+
+   11 feature: OBJECTID ':' TYPEID
+   12        | OBJECTID ':' TYPEID ASSIGN expression
+   13        | OBJECTID '(' ')' ':' TYPEID '{' expression '}'
+   14        | OBJECTID '(' formal_list ')' ':' TYPEID '{' expression '}'
+
+   15 formal_list: formal
+   16            | formal_list ',' formal
+
+   17 formal: OBJECTID ':' TYPEID
+
+   18 comma_expression: %empty
+   19                 | expression
+   20                 | comma_expression ',' expression
+
+   21 expression: OBJECTID ASSIGN expression
+   22           | expression '.' OBJECTID '(' comma_expression ')'
+   23           | expression '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   24           | OBJECTID '(' comma_expression ')'
+   25           | IF expression THEN expression ELSE expression FI
+   26           | WHILE expression LOOP expression POOL
+   27           | '{' semicolon_expression '}'
+   28           | LET let_list
+   29           | CASE expression OF case_list ESAC
+   30           | NEW TYPEID
+   31           | ISVOID expression
+   32           | expression '+' expression
+   33           | expression '-' expression
+   34           | expression '*' expression
+   35           | expression '/' expression
+   36           | '~' expression
+   37           | expression '<' expression
+   38           | expression LE expression
+   39           | expression '=' expression
+   40           | NOT expression
+   41           | '(' expression ')'
+   42           | OBJECTID
+   43           | INT_CONST
+   44           | STR_CONST
+   45           | BOOL_CONST
+
+   46 semicolon_expression: expression ';'
+   47                     | semicolon_expression expression ';'
+
+   48 let_list: OBJECTID ':' TYPEID IN expression
+   49         | OBJECTID ':' TYPEID ASSIGN expression IN expression
+   50         | OBJECTID ':' TYPEID ',' let_list
+   51         | OBJECTID ':' TYPEID ASSIGN expression ',' let_list
+   52         | error ',' let_list
+
+   53 case_list: case_exp
+   54          | case_list case_exp
+
+   55 case_exp: OBJECTID ':' TYPEID DARROW expression ';'
+
+
+终结语词，附有它们出现处的规则
+
+    $end (0) 0
+    '(' (40) 13 14 22 23 24 41
+    ')' (41) 13 14 22 23 24 41
+    '*' (42) 34
+    '+' (43) 32
+    ',' (44) 16 20 50 51 52
+    '-' (45) 33
+    '.' (46) 22 23
+    '/' (47) 35
+    ':' (58) 11 12 13 14 17 48 49 50 51 55
+    ';' (59) 4 5 6 7 8 9 10 46 47 55
+    '<' (60) 37
+    '=' (61) 39
+    '@' (64) 23
+    '{' (123) 5 6 7 8 13 14 27
+    '}' (125) 5 6 7 8 13 14 27
+    '~' (126) 36
+    error (256) 4 52
+    CLASS (258) 5 6 7 8
+    ELSE (259) 25
+    FI (260) 25
+    IF (261) 25
+    IN (262) 48 49
+    INHERITS (263) 6 8
+    LET (264) 28
+    LOOP (265) 26
+    POOL (266) 26
+    THEN (267) 25
+    WHILE (268) 26
+    CASE (269) 29
+    ESAC (270) 29
+    OF (271) 29
+    DARROW (272) 55
+    NEW (273) 30
+    ISVOID (274) 31
+    STR_CONST <symbol> (275) 44
+    INT_CONST <symbol> (276) 43
+    BOOL_CONST <boolean> (277) 45
+    TYPEID <symbol> (278) 5 6 7 8 11 12 13 14 17 23 30 48 49 50 51 55
+    OBJECTID <symbol> (279) 11 12 13 14 17 21 22 23 24 42 48 49 50 51 55
+    ASSIGN (280) 12 21 49 51
+    NOT (281) 40
+    LE (282) 38
+    ERROR (283)
+
+
+非终结语词，附有它们出现处的规则
+
+    $accept (45)
+        on left: 0
+    program <program> (46)
+        on left: 1
+        on right: 0
+    class_list <classes> (47)
+        on left: 2 3 4
+        on right: 1 3 4
+    class <class_> (48)
+        on left: 5 6 7 8
+        on right: 2 3
+    dummy_feature_list <features> (49)
+        on left: 9 10
+        on right: 7 8 10
+    feature <feature> (50)
+        on left: 11 12 13 14
+        on right: 9 10
+    formal_list <formals> (51)
+        on left: 15 16
+        on right: 14 16
+    formal <formal> (52)
+        on left: 17
+        on right: 15 16
+    comma_expression <expressions> (53)
+        on left: 18 19 20
+        on right: 20 22 23 24
+    expression <expression> (54)
+        on left: 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45
+        on right: 12 13 14 19 20 21 22 23 25 26 29 31 32 33 34 35 36 37 38 39 40 41 46 47 48 49 51 55
+    semicolon_expression <expressions> (55)
+        on left: 46 47
+        on right: 27 47
+    let_list <expression> (56)
+        on left: 48 49 50 51 52
+        on right: 28 50 51 52
+    case_list <cases> (57)
+        on left: 53 54
+        on right: 29 54
+    case_exp <case_> (58)
+        on left: 55
+        on right: 53 54
+
+
+状态 0
+
+    0 $accept: . program $end
+
+    CLASS  偏移，并进入状态 1
+
+    program     转到状态 2
+    class_list  转到状态 3
+    class       转到状态 4
+
+
+状态 1
+
+    5 class: CLASS . TYPEID '{' '}' ';'
+    6      | CLASS . TYPEID INHERITS TYPEID '{' '}' ';'
+    7      | CLASS . TYPEID '{' dummy_feature_list '}' ';'
+    8      | CLASS . TYPEID INHERITS TYPEID '{' dummy_feature_list '}' ';'
+
+    TYPEID  偏移，并进入状态 5
+
+
+状态 2
+
+    0 $accept: program . $end
+
+    $end  偏移，并进入状态 6
+
+
+状态 3
+
+    1 program: class_list .
+    3 class_list: class_list . class
+    4           | class_list . error ';'
+
+    error  偏移，并进入状态 7
+    CLASS  偏移，并进入状态 1
+
+    $end  使用规则 1 以归约 (program)
+
+    class  转到状态 8
+
+
+状态 4
+
+    2 class_list: class .
+
+    $default  使用规则 2 以归约 (class_list)
+
+
+状态 5
+
+    5 class: CLASS TYPEID . '{' '}' ';'
+    6      | CLASS TYPEID . INHERITS TYPEID '{' '}' ';'
+    7      | CLASS TYPEID . '{' dummy_feature_list '}' ';'
+    8      | CLASS TYPEID . INHERITS TYPEID '{' dummy_feature_list '}' ';'
+
+    INHERITS  偏移，并进入状态 9
+    '{'       偏移，并进入状态 10
+
+
+状态 6
+
+    0 $accept: program $end .
+
+    $default  接受
+
+
+状态 7
+
+    4 class_list: class_list error . ';'
+
+    ';'  偏移，并进入状态 11
+
+
+状态 8
+
+    3 class_list: class_list class .
+
+    $default  使用规则 3 以归约 (class_list)
+
+
+状态 9
+
+    6 class: CLASS TYPEID INHERITS . TYPEID '{' '}' ';'
+    8      | CLASS TYPEID INHERITS . TYPEID '{' dummy_feature_list '}' ';'
+
+    TYPEID  偏移，并进入状态 12
+
+
+状态 10
+
+    5 class: CLASS TYPEID '{' . '}' ';'
+    7      | CLASS TYPEID '{' . dummy_feature_list '}' ';'
+
+    OBJECTID  偏移，并进入状态 13
+    '}'       偏移，并进入状态 14
+
+    dummy_feature_list  转到状态 15
+    feature             转到状态 16
+
+
+状态 11
+
+    4 class_list: class_list error ';' .
+
+    $default  使用规则 4 以归约 (class_list)
+
+
+状态 12
+
+    6 class: CLASS TYPEID INHERITS TYPEID . '{' '}' ';'
+    8      | CLASS TYPEID INHERITS TYPEID . '{' dummy_feature_list '}' ';'
+
+    '{'  偏移，并进入状态 17
+
+
+状态 13
+
+   11 feature: OBJECTID . ':' TYPEID
+   12        | OBJECTID . ':' TYPEID ASSIGN expression
+   13        | OBJECTID . '(' ')' ':' TYPEID '{' expression '}'
+   14        | OBJECTID . '(' formal_list ')' ':' TYPEID '{' expression '}'
+
+    ':'  偏移，并进入状态 18
+    '('  偏移，并进入状态 19
+
+
+状态 14
+
+    5 class: CLASS TYPEID '{' '}' . ';'
+
+    ';'  偏移，并进入状态 20
+
+
+状态 15
+
+    7 class: CLASS TYPEID '{' dummy_feature_list . '}' ';'
+   10 dummy_feature_list: dummy_feature_list . feature ';'
+
+    OBJECTID  偏移，并进入状态 13
+    '}'       偏移，并进入状态 21
+
+    feature  转到状态 22
+
+
+状态 16
+
+    9 dummy_feature_list: feature . ';'
+
+    ';'  偏移，并进入状态 23
+
+
+状态 17
+
+    6 class: CLASS TYPEID INHERITS TYPEID '{' . '}' ';'
+    8      | CLASS TYPEID INHERITS TYPEID '{' . dummy_feature_list '}' ';'
+
+    OBJECTID  偏移，并进入状态 13
+    '}'       偏移，并进入状态 24
+
+    dummy_feature_list  转到状态 25
+    feature             转到状态 16
+
+
+状态 18
+
+   11 feature: OBJECTID ':' . TYPEID
+   12        | OBJECTID ':' . TYPEID ASSIGN expression
+
+    TYPEID  偏移，并进入状态 26
+
+
+状态 19
+
+   13 feature: OBJECTID '(' . ')' ':' TYPEID '{' expression '}'
+   14        | OBJECTID '(' . formal_list ')' ':' TYPEID '{' expression '}'
+
+    OBJECTID  偏移，并进入状态 27
+    ')'       偏移，并进入状态 28
+
+    formal_list  转到状态 29
+    formal       转到状态 30
+
+
+状态 20
+
+    5 class: CLASS TYPEID '{' '}' ';' .
+
+    $default  使用规则 5 以归约 (class)
+
+
+状态 21
+
+    7 class: CLASS TYPEID '{' dummy_feature_list '}' . ';'
+
+    ';'  偏移，并进入状态 31
+
+
+状态 22
+
+   10 dummy_feature_list: dummy_feature_list feature . ';'
+
+    ';'  偏移，并进入状态 32
+
+
+状态 23
+
+    9 dummy_feature_list: feature ';' .
+
+    $default  使用规则 9 以归约 (dummy_feature_list)
+
+
+状态 24
+
+    6 class: CLASS TYPEID INHERITS TYPEID '{' '}' . ';'
+
+    ';'  偏移，并进入状态 33
+
+
+状态 25
+
+    8 class: CLASS TYPEID INHERITS TYPEID '{' dummy_feature_list . '}' ';'
+   10 dummy_feature_list: dummy_feature_list . feature ';'
+
+    OBJECTID  偏移，并进入状态 13
+    '}'       偏移，并进入状态 34
+
+    feature  转到状态 22
+
+
+状态 26
+
+   11 feature: OBJECTID ':' TYPEID .
+   12        | OBJECTID ':' TYPEID . ASSIGN expression
+
+    ASSIGN  偏移，并进入状态 35
+
+    $default  使用规则 11 以归约 (feature)
+
+
+状态 27
+
+   17 formal: OBJECTID . ':' TYPEID
+
+    ':'  偏移，并进入状态 36
+
+
+状态 28
+
+   13 feature: OBJECTID '(' ')' . ':' TYPEID '{' expression '}'
+
+    ':'  偏移，并进入状态 37
+
+
+状态 29
+
+   14 feature: OBJECTID '(' formal_list . ')' ':' TYPEID '{' expression '}'
+   16 formal_list: formal_list . ',' formal
+
+    ')'  偏移，并进入状态 38
+    ','  偏移，并进入状态 39
+
+
+状态 30
+
+   15 formal_list: formal .
+
+    $default  使用规则 15 以归约 (formal_list)
+
+
+状态 31
+
+    7 class: CLASS TYPEID '{' dummy_feature_list '}' ';' .
+
+    $default  使用规则 7 以归约 (class)
+
+
+状态 32
+
+   10 dummy_feature_list: dummy_feature_list feature ';' .
+
+    $default  使用规则 10 以归约 (dummy_feature_list)
+
+
+状态 33
+
+    6 class: CLASS TYPEID INHERITS TYPEID '{' '}' ';' .
+
+    $default  使用规则 6 以归约 (class)
+
+
+状态 34
+
+    8 class: CLASS TYPEID INHERITS TYPEID '{' dummy_feature_list '}' . ';'
+
+    ';'  偏移，并进入状态 40
+
+
+状态 35
+
+   12 feature: OBJECTID ':' TYPEID ASSIGN . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 55
+
+
+状态 36
+
+   17 formal: OBJECTID ':' . TYPEID
+
+    TYPEID  偏移，并进入状态 56
+
+
+状态 37
+
+   13 feature: OBJECTID '(' ')' ':' . TYPEID '{' expression '}'
+
+    TYPEID  偏移，并进入状态 57
+
+
+状态 38
+
+   14 feature: OBJECTID '(' formal_list ')' . ':' TYPEID '{' expression '}'
+
+    ':'  偏移，并进入状态 58
+
+
+状态 39
+
+   16 formal_list: formal_list ',' . formal
+
+    OBJECTID  偏移，并进入状态 27
+
+    formal  转到状态 59
+
+
+状态 40
+
+    8 class: CLASS TYPEID INHERITS TYPEID '{' dummy_feature_list '}' ';' .
+
+    $default  使用规则 8 以归约 (class)
+
+
+状态 41
+
+   25 expression: IF . expression THEN expression ELSE expression FI
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 60
+
+
+状态 42
+
+   28 expression: LET . let_list
+
+    error     偏移，并进入状态 61
+    OBJECTID  偏移，并进入状态 62
+
+    let_list  转到状态 63
+
+
+状态 43
+
+   26 expression: WHILE . expression LOOP expression POOL
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 64
+
+
+状态 44
+
+   29 expression: CASE . expression OF case_list ESAC
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 65
+
+
+状态 45
+
+   30 expression: NEW . TYPEID
+
+    TYPEID  偏移，并进入状态 66
+
+
+状态 46
+
+   31 expression: ISVOID . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 67
+
+
+状态 47
+
+   44 expression: STR_CONST .
+
+    $default  使用规则 44 以归约 (expression)
+
+
+状态 48
+
+   43 expression: INT_CONST .
+
+    $default  使用规则 43 以归约 (expression)
+
+
+状态 49
+
+   45 expression: BOOL_CONST .
+
+    $default  使用规则 45 以归约 (expression)
+
+
+状态 50
+
+   21 expression: OBJECTID . ASSIGN expression
+   24           | OBJECTID . '(' comma_expression ')'
+   42           | OBJECTID .
+
+    ASSIGN  偏移，并进入状态 68
+    '('     偏移，并进入状态 69
+
+    $default  使用规则 42 以归约 (expression)
+
+
+状态 51
+
+   40 expression: NOT . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 70
+
+
+状态 52
+
+   36 expression: '~' . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 71
+
+
+状态 53
+
+   27 expression: '{' . semicolon_expression '}'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression            转到状态 72
+    semicolon_expression  转到状态 73
+
+
+状态 54
+
+   41 expression: '(' . expression ')'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 74
+
+
+状态 55
+
+   12 feature: OBJECTID ':' TYPEID ASSIGN expression .
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 12 以归约 (feature)
+
+
+状态 56
+
+   17 formal: OBJECTID ':' TYPEID .
+
+    $default  使用规则 17 以归约 (formal)
+
+
+状态 57
+
+   13 feature: OBJECTID '(' ')' ':' TYPEID . '{' expression '}'
+
+    '{'  偏移，并进入状态 84
+
+
+状态 58
+
+   14 feature: OBJECTID '(' formal_list ')' ':' . TYPEID '{' expression '}'
+
+    TYPEID  偏移，并进入状态 85
+
+
+状态 59
+
+   16 formal_list: formal_list ',' formal .
+
+    $default  使用规则 16 以归约 (formal_list)
+
+
+状态 60
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   25           | IF expression . THEN expression ELSE expression FI
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    THEN  偏移，并进入状态 86
+    LE    偏移，并进入状态 75
+    '='   偏移，并进入状态 76
+    '<'   偏移，并进入状态 77
+    '+'   偏移，并进入状态 78
+    '-'   偏移，并进入状态 79
+    '*'   偏移，并进入状态 80
+    '/'   偏移，并进入状态 81
+    '@'   偏移，并进入状态 82
+    '.'   偏移，并进入状态 83
+
+
+状态 61
+
+   52 let_list: error . ',' let_list
+
+    ','  偏移，并进入状态 87
+
+
+状态 62
+
+   48 let_list: OBJECTID . ':' TYPEID IN expression
+   49         | OBJECTID . ':' TYPEID ASSIGN expression IN expression
+   50         | OBJECTID . ':' TYPEID ',' let_list
+   51         | OBJECTID . ':' TYPEID ASSIGN expression ',' let_list
+
+    ':'  偏移，并进入状态 88
+
+
+状态 63
+
+   28 expression: LET let_list .
+
+    $default  使用规则 28 以归约 (expression)
+
+
+状态 64
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   26           | WHILE expression . LOOP expression POOL
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    LOOP  偏移，并进入状态 89
+    LE    偏移，并进入状态 75
+    '='   偏移，并进入状态 76
+    '<'   偏移，并进入状态 77
+    '+'   偏移，并进入状态 78
+    '-'   偏移，并进入状态 79
+    '*'   偏移，并进入状态 80
+    '/'   偏移，并进入状态 81
+    '@'   偏移，并进入状态 82
+    '.'   偏移，并进入状态 83
+
+
+状态 65
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   29           | CASE expression . OF case_list ESAC
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    OF   偏移，并进入状态 90
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+
+状态 66
+
+   30 expression: NEW TYPEID .
+
+    $default  使用规则 30 以归约 (expression)
+
+
+状态 67
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   31           | ISVOID expression .
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 31 以归约 (expression)
+
+
+状态 68
+
+   21 expression: OBJECTID ASSIGN . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 91
+
+
+状态 69
+
+   24 expression: OBJECTID '(' . comma_expression ')'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    $default  使用规则 18 以归约 (comma_expression)
+
+    comma_expression  转到状态 92
+    expression        转到状态 93
+
+
+状态 70
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   40           | NOT expression .
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 40 以归约 (expression)
+
+
+状态 71
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   36           | '~' expression .
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 36 以归约 (expression)
+
+
+状态 72
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   46 semicolon_expression: expression . ';'
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+    ';'  偏移，并进入状态 94
+
+
+状态 73
+
+   27 expression: '{' semicolon_expression . '}'
+   47 semicolon_expression: semicolon_expression . expression ';'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '}'         偏移，并进入状态 95
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 96
+
+
+状态 74
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   41           | '(' expression . ')'
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+    ')'  偏移，并进入状态 97
+
+
+状态 75
+
+   38 expression: expression LE . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 98
+
+
+状态 76
+
+   39 expression: expression '=' . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 99
+
+
+状态 77
+
+   37 expression: expression '<' . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 100
+
+
+状态 78
+
+   32 expression: expression '+' . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 101
+
+
+状态 79
+
+   33 expression: expression '-' . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 102
+
+
+状态 80
+
+   34 expression: expression '*' . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 103
+
+
+状态 81
+
+   35 expression: expression '/' . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 104
+
+
+状态 82
+
+   23 expression: expression '@' . TYPEID '.' OBJECTID '(' comma_expression ')'
+
+    TYPEID  偏移，并进入状态 105
+
+
+状态 83
+
+   22 expression: expression '.' . OBJECTID '(' comma_expression ')'
+
+    OBJECTID  偏移，并进入状态 106
+
+
+状态 84
+
+   13 feature: OBJECTID '(' ')' ':' TYPEID '{' . expression '}'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 107
+
+
+状态 85
+
+   14 feature: OBJECTID '(' formal_list ')' ':' TYPEID . '{' expression '}'
+
+    '{'  偏移，并进入状态 108
+
+
+状态 86
+
+   25 expression: IF expression THEN . expression ELSE expression FI
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 109
+
+
+状态 87
+
+   52 let_list: error ',' . let_list
+
+    error     偏移，并进入状态 61
+    OBJECTID  偏移，并进入状态 62
+
+    let_list  转到状态 110
+
+
+状态 88
+
+   48 let_list: OBJECTID ':' . TYPEID IN expression
+   49         | OBJECTID ':' . TYPEID ASSIGN expression IN expression
+   50         | OBJECTID ':' . TYPEID ',' let_list
+   51         | OBJECTID ':' . TYPEID ASSIGN expression ',' let_list
+
+    TYPEID  偏移，并进入状态 111
+
+
+状态 89
+
+   26 expression: WHILE expression LOOP . expression POOL
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 112
+
+
+状态 90
+
+   29 expression: CASE expression OF . case_list ESAC
+
+    OBJECTID  偏移，并进入状态 113
+
+    case_list  转到状态 114
+    case_exp   转到状态 115
+
+
+状态 91
+
+   21 expression: OBJECTID ASSIGN expression .
+   22           | expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 21 以归约 (expression)
+
+
+状态 92
+
+   20 comma_expression: comma_expression . ',' expression
+   24 expression: OBJECTID '(' comma_expression . ')'
+
+    ')'  偏移，并进入状态 116
+    ','  偏移，并进入状态 117
+
+
+状态 93
+
+   19 comma_expression: expression .
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 19 以归约 (comma_expression)
+
+
+状态 94
+
+   46 semicolon_expression: expression ';' .
+
+    $default  使用规则 46 以归约 (semicolon_expression)
+
+
+状态 95
+
+   27 expression: '{' semicolon_expression '}' .
+
+    $default  使用规则 27 以归约 (expression)
+
+
+状态 96
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   47 semicolon_expression: semicolon_expression expression . ';'
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+    ';'  偏移，并进入状态 118
+
+
+状态 97
+
+   41 expression: '(' expression ')' .
+
+    $default  使用规则 41 以归约 (expression)
+
+
+状态 98
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   38           | expression LE expression .
+   39           | expression . '=' expression
+
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    LE   错误 (非相联的)
+    '='  错误 (非相联的)
+
+    $default  使用规则 38 以归约 (expression)
+
+
+状态 99
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   39           | expression '=' expression .
+
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    LE   错误 (非相联的)
+    '='  错误 (非相联的)
+
+    $default  使用规则 39 以归约 (expression)
+
+
+状态 100
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   37           | expression '<' expression .
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 37 以归约 (expression)
+
+
+状态 101
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   32           | expression '+' expression .
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 32 以归约 (expression)
+
+
+状态 102
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   33           | expression '-' expression .
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 33 以归约 (expression)
+
+
+状态 103
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   34           | expression '*' expression .
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 34 以归约 (expression)
+
+
+状态 104
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   35           | expression '/' expression .
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 35 以归约 (expression)
+
+
+状态 105
+
+   23 expression: expression '@' TYPEID . '.' OBJECTID '(' comma_expression ')'
+
+    '.'  偏移，并进入状态 119
+
+
+状态 106
+
+   22 expression: expression '.' OBJECTID . '(' comma_expression ')'
+
+    '('  偏移，并进入状态 120
+
+
+状态 107
+
+   13 feature: OBJECTID '(' ')' ':' TYPEID '{' expression . '}'
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+    '}'  偏移，并进入状态 121
+
+
+状态 108
+
+   14 feature: OBJECTID '(' formal_list ')' ':' TYPEID '{' . expression '}'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 122
+
+
+状态 109
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   25           | IF expression THEN expression . ELSE expression FI
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    ELSE  偏移，并进入状态 123
+    LE    偏移，并进入状态 75
+    '='   偏移，并进入状态 76
+    '<'   偏移，并进入状态 77
+    '+'   偏移，并进入状态 78
+    '-'   偏移，并进入状态 79
+    '*'   偏移，并进入状态 80
+    '/'   偏移，并进入状态 81
+    '@'   偏移，并进入状态 82
+    '.'   偏移，并进入状态 83
+
+
+状态 110
+
+   52 let_list: error ',' let_list .
+
+    $default  使用规则 52 以归约 (let_list)
+
+
+状态 111
+
+   48 let_list: OBJECTID ':' TYPEID . IN expression
+   49         | OBJECTID ':' TYPEID . ASSIGN expression IN expression
+   50         | OBJECTID ':' TYPEID . ',' let_list
+   51         | OBJECTID ':' TYPEID . ASSIGN expression ',' let_list
+
+    IN      偏移，并进入状态 124
+    ASSIGN  偏移，并进入状态 125
+    ','     偏移，并进入状态 126
+
+
+状态 112
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   26           | WHILE expression LOOP expression . POOL
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    POOL  偏移，并进入状态 127
+    LE    偏移，并进入状态 75
+    '='   偏移，并进入状态 76
+    '<'   偏移，并进入状态 77
+    '+'   偏移，并进入状态 78
+    '-'   偏移，并进入状态 79
+    '*'   偏移，并进入状态 80
+    '/'   偏移，并进入状态 81
+    '@'   偏移，并进入状态 82
+    '.'   偏移，并进入状态 83
+
+
+状态 113
+
+   55 case_exp: OBJECTID . ':' TYPEID DARROW expression ';'
+
+    ':'  偏移，并进入状态 128
+
+
+状态 114
+
+   29 expression: CASE expression OF case_list . ESAC
+   54 case_list: case_list . case_exp
+
+    ESAC      偏移，并进入状态 129
+    OBJECTID  偏移，并进入状态 113
+
+    case_exp  转到状态 130
+
+
+状态 115
+
+   53 case_list: case_exp .
+
+    $default  使用规则 53 以归约 (case_list)
+
+
+状态 116
+
+   24 expression: OBJECTID '(' comma_expression ')' .
+
+    $default  使用规则 24 以归约 (expression)
+
+
+状态 117
+
+   20 comma_expression: comma_expression ',' . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 131
+
+
+状态 118
+
+   47 semicolon_expression: semicolon_expression expression ';' .
+
+    $default  使用规则 47 以归约 (semicolon_expression)
+
+
+状态 119
+
+   23 expression: expression '@' TYPEID '.' . OBJECTID '(' comma_expression ')'
+
+    OBJECTID  偏移，并进入状态 132
+
+
+状态 120
+
+   22 expression: expression '.' OBJECTID '(' . comma_expression ')'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    $default  使用规则 18 以归约 (comma_expression)
+
+    comma_expression  转到状态 133
+    expression        转到状态 93
+
+
+状态 121
+
+   13 feature: OBJECTID '(' ')' ':' TYPEID '{' expression '}' .
+
+    $default  使用规则 13 以归约 (feature)
+
+
+状态 122
+
+   14 feature: OBJECTID '(' formal_list ')' ':' TYPEID '{' expression . '}'
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+    '}'  偏移，并进入状态 134
+
+
+状态 123
+
+   25 expression: IF expression THEN expression ELSE . expression FI
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 135
+
+
+状态 124
+
+   48 let_list: OBJECTID ':' TYPEID IN . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 136
+
+
+状态 125
+
+   49 let_list: OBJECTID ':' TYPEID ASSIGN . expression IN expression
+   51         | OBJECTID ':' TYPEID ASSIGN . expression ',' let_list
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 137
+
+
+状态 126
+
+   50 let_list: OBJECTID ':' TYPEID ',' . let_list
+
+    error     偏移，并进入状态 61
+    OBJECTID  偏移，并进入状态 62
+
+    let_list  转到状态 138
+
+
+状态 127
+
+   26 expression: WHILE expression LOOP expression POOL .
+
+    $default  使用规则 26 以归约 (expression)
+
+
+状态 128
+
+   55 case_exp: OBJECTID ':' . TYPEID DARROW expression ';'
+
+    TYPEID  偏移，并进入状态 139
+
+
+状态 129
+
+   29 expression: CASE expression OF case_list ESAC .
+
+    $default  使用规则 29 以归约 (expression)
+
+
+状态 130
+
+   54 case_list: case_list case_exp .
+
+    $default  使用规则 54 以归约 (case_list)
+
+
+状态 131
+
+   20 comma_expression: comma_expression ',' expression .
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 20 以归约 (comma_expression)
+
+
+状态 132
+
+   23 expression: expression '@' TYPEID '.' OBJECTID . '(' comma_expression ')'
+
+    '('  偏移，并进入状态 140
+
+
+状态 133
+
+   20 comma_expression: comma_expression . ',' expression
+   22 expression: expression '.' OBJECTID '(' comma_expression . ')'
+
+    ')'  偏移，并进入状态 141
+    ','  偏移，并进入状态 117
+
+
+状态 134
+
+   14 feature: OBJECTID '(' formal_list ')' ':' TYPEID '{' expression '}' .
+
+    $default  使用规则 14 以归约 (feature)
+
+
+状态 135
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   25           | IF expression THEN expression ELSE expression . FI
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+
+    FI   偏移，并进入状态 142
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+
+状态 136
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   48 let_list: OBJECTID ':' TYPEID IN expression .
+
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 48 以归约 (let_list)
+
+
+状态 137
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   49 let_list: OBJECTID ':' TYPEID ASSIGN expression . IN expression
+   51         | OBJECTID ':' TYPEID ASSIGN expression . ',' let_list
+
+    IN   偏移，并进入状态 143
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+    ','  偏移，并进入状态 144
+
+
+状态 138
+
+   50 let_list: OBJECTID ':' TYPEID ',' let_list .
+
+    $default  使用规则 50 以归约 (let_list)
+
+
+状态 139
+
+   55 case_exp: OBJECTID ':' TYPEID . DARROW expression ';'
+
+    DARROW  偏移，并进入状态 145
+
+
+状态 140
+
+   23 expression: expression '@' TYPEID '.' OBJECTID '(' . comma_expression ')'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    $default  使用规则 18 以归约 (comma_expression)
+
+    comma_expression  转到状态 146
+    expression        转到状态 93
+
+
+状态 141
+
+   22 expression: expression '.' OBJECTID '(' comma_expression ')' .
+
+    $default  使用规则 22 以归约 (expression)
+
+
+状态 142
+
+   25 expression: IF expression THEN expression ELSE expression FI .
+
+    $default  使用规则 25 以归约 (expression)
+
+
+状态 143
+
+   49 let_list: OBJECTID ':' TYPEID ASSIGN expression IN . expression
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 147
+
+
+状态 144
+
+   51 let_list: OBJECTID ':' TYPEID ASSIGN expression ',' . let_list
+
+    error     偏移，并进入状态 61
+    OBJECTID  偏移，并进入状态 62
+
+    let_list  转到状态 148
+
+
+状态 145
+
+   55 case_exp: OBJECTID ':' TYPEID DARROW . expression ';'
+
+    IF          偏移，并进入状态 41
+    LET         偏移，并进入状态 42
+    WHILE       偏移，并进入状态 43
+    CASE        偏移，并进入状态 44
+    NEW         偏移，并进入状态 45
+    ISVOID      偏移，并进入状态 46
+    STR_CONST   偏移，并进入状态 47
+    INT_CONST   偏移，并进入状态 48
+    BOOL_CONST  偏移，并进入状态 49
+    OBJECTID    偏移，并进入状态 50
+    NOT         偏移，并进入状态 51
+    '~'         偏移，并进入状态 52
+    '{'         偏移，并进入状态 53
+    '('         偏移，并进入状态 54
+
+    expression  转到状态 149
+
+
+状态 146
+
+   20 comma_expression: comma_expression . ',' expression
+   23 expression: expression '@' TYPEID '.' OBJECTID '(' comma_expression . ')'
+
+    ')'  偏移，并进入状态 150
+    ','  偏移，并进入状态 117
+
+
+状态 147
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   49 let_list: OBJECTID ':' TYPEID ASSIGN expression IN expression .
+
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+
+    $default  使用规则 49 以归约 (let_list)
+
+
+状态 148
+
+   51 let_list: OBJECTID ':' TYPEID ASSIGN expression ',' let_list .
+
+    $default  使用规则 51 以归约 (let_list)
+
+
+状态 149
+
+   22 expression: expression . '.' OBJECTID '(' comma_expression ')'
+   23           | expression . '@' TYPEID '.' OBJECTID '(' comma_expression ')'
+   32           | expression . '+' expression
+   33           | expression . '-' expression
+   34           | expression . '*' expression
+   35           | expression . '/' expression
+   37           | expression . '<' expression
+   38           | expression . LE expression
+   39           | expression . '=' expression
+   55 case_exp: OBJECTID ':' TYPEID DARROW expression . ';'
+
+    LE   偏移，并进入状态 75
+    '='  偏移，并进入状态 76
+    '<'  偏移，并进入状态 77
+    '+'  偏移，并进入状态 78
+    '-'  偏移，并进入状态 79
+    '*'  偏移，并进入状态 80
+    '/'  偏移，并进入状态 81
+    '@'  偏移，并进入状态 82
+    '.'  偏移，并进入状态 83
+    ';'  偏移，并进入状态 151
+
+
+状态 150
+
+   23 expression: expression '@' TYPEID '.' OBJECTID '(' comma_expression ')' .
+
+    $default  使用规则 23 以归约 (expression)
+
+
+状态 151
+
+   55 case_exp: OBJECTID ':' TYPEID DARROW expression ';' .
+
+    $default  使用规则 55 以归约 (case_exp)
